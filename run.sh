@@ -6,9 +6,11 @@
 #SBATCH --mem=16G
 
 source ~/.bashrc
+
 CONTAINER_IMAGE="env.sif"
 if [ ! -f $CONTAINER_IMAGE ]; then
-    apptainer build --fakeroot env.sif env.def
+    echo ".sif file is not exist."
+    exit 1
 fi
 
 TIMESTAMP=$(date +%y%m%d_%H%M)
