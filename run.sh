@@ -7,8 +7,8 @@
 #SBATCH --mem=16G
 
 source ~/.bashrc
-if [ ! -f testenv.sif ]; then
-    apptainer build --fakeroot testenv.sif testenv.def
+if [ ! -f env.sif ]; then
+    apptainer build --fakeroot env.sif env.def
 fi
 
 TIMESTAMP=$(date +%y%m%d_%H%M)
@@ -25,5 +25,5 @@ git diff > "$OUT_DIR/git_diff.patch"
 
 ln -snf "$(realpath $OUT_DIR)" results/latest
 
-apptainer exec --nv testenv.sif bash -c "
+apptainer exec --nv env.sif bash -c "
     python3 scripts/00_test.py"
