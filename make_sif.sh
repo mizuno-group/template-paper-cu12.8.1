@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=interactive
 #SBATCH --time=01:00:00
+#SBATCH --output=build_%J.log
 
 rm -f env.sif
 
