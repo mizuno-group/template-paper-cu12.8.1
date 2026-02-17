@@ -24,5 +24,4 @@ git diff > "$OUT_DIR/git_diff.patch"
 
 ln -snf "$(realpath $OUT_DIR)" results/latest
 
-apptainer exec --nv --bind $(pwd):$(pwd) env.sif \
-    bash -c "cd $(pwd) && uv run python scripts/00_test.py"
+apptainer exec --nv env.sif bash -c "uv run python scripts/00_test.py"
