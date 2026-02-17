@@ -2,9 +2,9 @@
 #SBATCH --partition=interactive
 #SBATCH --time=01:00:00
 
-rm -f testenv.sif
+rm -f env.sif
 
-apptainer build --fakeroot testenv.sif testenv.def
+apptainer build --fakeroot env.sif env.def
 
 if [ $? -eq 0 ]; then
     echo "Build successful!"
