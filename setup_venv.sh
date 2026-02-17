@@ -1,4 +1,6 @@
 #!/bin/bash
+#SBATCH --partition=interactive
+#SBATCH --output=setup_%j.log
 
 CONTAINER_IMAGE="env.sif"
 
