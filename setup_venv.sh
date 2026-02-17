@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER_IMAGE="testenv.sif"
+CONTAINER_IMAGE="env.sif"
 
 # uvのキャッシュディレクトリをホスト側に固定（高速化のため）
 export UV_CACHE_DIR="$(pwd)/.uv_cache"
