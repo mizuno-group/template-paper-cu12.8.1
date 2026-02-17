@@ -19,7 +19,6 @@ exec > >(tee -a "${OUT_DIR}/stdout.log")
 exec 2> >(tee -a "${OUT_DIR}/stderr.log" >&2)
 
 cp "$0" "$OUT_DIR/job_script.sh"
-cp config.yaml "$OUT_DIR/config.yaml"
 git rev-parse HEAD > "$OUT_DIR/git_commit.txt"
 git diff > "$OUT_DIR/git_diff.patch"
 
