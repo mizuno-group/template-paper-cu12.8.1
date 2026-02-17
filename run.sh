@@ -7,7 +7,7 @@
 
 source ~/.bashrc
 CONTAINER_IMAGE="env.sif"
-if [ ! -f CONTAINER_IMAGE ]; then
+if [ ! -f $CONTAINER_IMAGE ]; then
     apptainer build --fakeroot env.sif env.def
 fi
 
@@ -24,4 +24,4 @@ git diff > "$OUT_DIR/git_diff.patch"
 
 ln -snf "$(realpath $OUT_DIR)" results/latest
 
-apptainer exec --nv CONTAINER_IMAGE bash -c "uv run python scripts/00_test.py"
+apptainer exec --nv $CONTAINER_IMAGE bash -c "uv run python scripts/00_test.py"
