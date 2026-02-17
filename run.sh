@@ -8,7 +8,8 @@
 
 source ~/.bashrc
 if [ ! -f env.sif ]; then
-    apptainer build --fakeroot env.sif env.def
+    echo ".sif file is not exist."
+    exit 1
 fi
 
 TIMESTAMP=$(date +%y%m%d_%H%M)
