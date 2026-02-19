@@ -12,7 +12,7 @@ echo "=== uv syncing (creating .venv) ==="
 
 # apptainer exec でコンテナ内の uv を呼び出す
 apptainer exec --nv "$CONTAINER_IMAGE" \
-    bash -c "uv venv .venv && \
+    bash -c "uv venv .venv --clear && \
              uv sync"
 
 echo "=== Setup Complete ==="
