@@ -4,6 +4,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
 #SBATCH --mem=16G
+#SBATCH --output=/dev/null
+#SBATCH --error=/dev/null
 
 # 環境変数として.bashrcを宣言
 source ~/.bashrc
