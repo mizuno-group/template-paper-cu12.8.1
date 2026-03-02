@@ -5,7 +5,7 @@
 
 rm -f env.sif
 
-apptainer build --fakeroot env.sif env.def
+apptainer build env.sif env.def
 
 if [ $? -eq 0 ]; then
     echo "Build successful!"
