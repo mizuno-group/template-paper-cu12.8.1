@@ -1,7 +1,8 @@
 # template-paper
 論文公開用テンプレート
 
-`template-dev`を基礎とし, 論文の結果の**再現性**を担保することを最優先としたテンプレート。第三者がリポジトリの指示に従うだけで論文の図や数値を再現できる状態を目指す。
+`template-dev`を基礎とし, 論文の結果の**再現性**を担保することを最優先としたテンプレート。第三者がリポジトリの指示に従うだけで論文の図や数値を再現できる状態を目指す。  
+Slurmでの利用が可能なように環境構築、実行のスクリプトを含む。
 
 
 ## 特徴
@@ -29,7 +30,11 @@
 │       └── core.py
 ├── .gitignore
 ├── LICENSE
+├── env.def          # 基本的な環境情報をまとめたもの
+├── make_sif.sh      # Apptainer構築のシェルスクリプト
 ├── pyproject.toml
+├── setup_venv.sh    # 環境構築のシェルスクリプト
+├── run.sh           # 実行用シェルスクリプト
 └── README.md
 ```
 
@@ -163,4 +168,5 @@ See the LICENSE file for details.
 
 ## Contact
 - [your_name] - [your_address]
+
 - [Tadahaya Mizuno] - tadahaya[at]gmail.com (lead contact)
