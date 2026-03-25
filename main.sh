@@ -12,32 +12,39 @@ set -euo pipefail
 # Scrach領域を利用する
 # 環境変数として.bashrcを宣言
 # source ~/.bashrc
-CONTAINER_IMAGE="/mnt/HDD/$USER/env.sif"
-
-# .sifファイルをコピーしておく
-
-# sifがあるかどうかを確認、なければエラーを出す
-if [ ! -f $CONTAINER_IMAGE ]; then
-    cp env.sif $CONTAINER_IMAGE
-fi
+PROJECT_NAME=$(basename "$SLURM_SUBMIT_DIR")
 
 # projectのディレクトリがあるか確認して、なければ作成する
-PROJECT_NAME=$(basename "$SLURM_SUBMIT_DIR")
 PROJECT_DIR="/mnt/HDD/$USER/$PROJECT_NAME"
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "Creating project directory at $PROJECT_DIR"
     mkdir -p "$PROJECT_DIR"
 fi
 
-# .venvを作成
-cp pyproject.toml "$PROJECT_DIR/"
-if [ -f uv.lock ]; then
-    cp uv.lock "$PROJECT_DIR/"
+EXCLUDES=(
+    '--exclude=*.log'
+    '--exclude=*.sif'
+    '--exclude=.uv_cache'
+    '--exclude=.venv'
+    '--exclude=outputs'
+    '--exclude=results'
+    '--exclude=__pycache__'
+)
+# ディレクトリごとrsyncを行う
+rsync -av "${EXCLUDES[@]}" . "/mnt/HDD/$USER/$PROJECT_NAME"
+
+# データが圧縮されている場合は展開する
+if [ -f "$PROJECT_DIR/data.tar.gz" ] && [ ! -d "$PROJECT_DIR/data" ]; then
+    echo "Extracting data..."
+    tar -xzf "$PROJECT_DIR/data.tar.gz" -C "$PROJECT_DIR/"
 fi
 
-apptainer exec --nv "$CONTAINER_IMAGE" \
-    bash -c "uv venv $PROJECT_DIR/.venv --clear && \
-             uv sync"
+cd "$PROJECT_DIR"
+
+# .venvを作成
+apptainer exec --nv "env.sif" \
+    bash -c "uv sync"
+
 export UV_PROJECT_ENVIRONMENT="$PROJECT_DIR/.venv"
 
 # ログなどの出力設定
@@ -61,6 +68,9 @@ git diff > "$OUT_DIR/git_diff.patch"
 ln -snf "$(realpath $OUT_DIR)" "$PROJECT_DIR/latest"
 
 # コード実行
-apptainer exec --nv $CONTAINER_IMAGE bash -c "uv run python scripts/00_test.py"
+apptainer exec --nv env.sif bash -c "uv run python scripts/00_test.py --out $OUT_DIR"
 
-rsync -av "$OUT_DIR" "results/"
+rsync -av "$OUT_DIR" "/workspace/filesrv01/$USER/$PROJECT_NAME/results/"
+
+# データセットや出力だけを消し、.venv と .uv_cache は維持
+find "$PROJECT_DIR" -maxdepth 1 ! -name '.venv' ! -name '.uv_cache' ! -name '.' -exec rm -rf {} +
