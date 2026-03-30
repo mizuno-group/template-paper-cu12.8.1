@@ -22,7 +22,7 @@ if [ ! -d "$PROJECT_DIR" ]; then
 fi
 
 # sifファイルがあるか確認し、なければ作成する
-if [ -d "$SLURM_SUBMIT_DIR/env.sif" ]; then
+if [ -f "$SLURM_SUBMIT_DIR/env.sif" ]; then
     echo "Transferring env.sif to project directory..."
     cp "$SLURM_SUBMIT_DIR/env.sif" "$PROJECT_DIR/"
 else
