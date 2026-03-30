@@ -22,7 +22,7 @@ if [ ! -d "$PROJECT_DIR" ]; then
 fi
 
 # 必要なファイルを計算ノード側のプロジェクトディレクトリに転送する
-rsync -av scripts src env.sif pyproject.toml uv.lock data* "$PROJECT_DIR/"
+rsync -av scripts src env.sif pyproject.toml uv.lock data* .git "$PROJECT_DIR/"
 
 # データが圧縮されている場合は展開する
 if [ -f "$PROJECT_DIR/data.tar.gz" ] && [ ! -d "$PROJECT_DIR/data" ]; then
@@ -46,6 +46,7 @@ OUT_DIR="$PROJECT_DIR/outputs/${TIMESTAMP}_${SLURM_JOB_ID}"
 mkdir -p "$OUT_DIR"
 
 # 標準出力、エラー出力のファイル
+# test_output内にも出力される、これはわかりやすく実行と紐づけるためなのでどちらかを消してもよいが実行途中にエラーになるとこちらは手元に戻らないので消すならこっち
 exec > >(tee -a "${OUT_DIR}/stdout.log")
 exec 2> >(tee -a "${OUT_DIR}/stderr.log" >&2)
 
@@ -55,7 +56,7 @@ git rev-parse HEAD > "$OUT_DIR/git_commit.txt"
 git diff > "$OUT_DIR/git_diff.patch"
 
 # 最新の結果を表示するlatest下のリンク作成
-ln -snf "$(realpath $OUT_DIR)" "$PROJECT_DIR/latest"
+ln -snf "$(realpath "$OUT_DIR")" "$PROJECT_DIR/latest"
 
 # コード実行
 # 実験の内容に応じて、00_test.pyの部分を適切なスクリプトに置き換える
