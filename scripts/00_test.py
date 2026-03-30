@@ -1,6 +1,6 @@
 """
 テスト用スクリプト
-main.shを実行し、このスクリプトを呼び出すとresukts/yymmdd_hhmm_jobid/test.txtを作成してSccess!と書き込む。
+main.shを実行し、このスクリプトを呼び出すとresults/yymmdd_hhmm_jobid/test.txtを作成してSccess!と書き込む。
 その後results以下がrsyncされて管理ノード側のディレクトリ内に現れることを確認できれば問題なく利用可能です。
 """
 
