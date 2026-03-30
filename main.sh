@@ -21,8 +21,17 @@ if [ ! -d "$PROJECT_DIR" ]; then
     mkdir -p "$PROJECT_DIR"
 fi
 
+# sifファイルがあるか確認し、なければ作成する
+if [ -d "$SLURM_SUBMIT_DIR/env.sif" ]; then
+    echo "Transferring env.sif to project directory..."
+    cp "$SLURM_SUBMIT_DIR/env.sif" "$PROJECT_DIR/"
+else
+    apptainer build --nv "$SLURM_SUBMIT_DIR/env.sif" "$SLURM_SUBMIT_DIR/env.def"
+    cp "$SLURM_SUBMIT_DIR/env.sif" "$PROJECT_DIR/"
+fi
+
 # 必要なファイルを計算ノード側のプロジェクトディレクトリに転送する
-rsync -av scripts src env.sif pyproject.toml uv.lock data* .git "$PROJECT_DIR/"
+rsync -av scripts src pyproject.toml uv.lock data* .git "$PROJECT_DIR/"
 
 # データが圧縮されている場合は展開する
 if [ -f "$PROJECT_DIR/data.tar.gz" ] && [ ! -d "$PROJECT_DIR/data" ]; then
@@ -63,6 +72,7 @@ ln -snf "$(realpath "$OUT_DIR")" "$PROJECT_DIR/latest"
 apptainer exec --nv env.sif bash -c "uv run python scripts/00_test.py --out $OUT_DIR"
 
 # 結果をCache領域に転送
+mkdir -p "$SLURM_SUBMIT_DIR/results"
 rsync -av "$OUT_DIR" "$SLURM_SUBMIT_DIR/results/"
 
 # データセットや出力だけを消し、.venv と .uv_cache は維持
