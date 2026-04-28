@@ -13,7 +13,7 @@ dependencies = [
     "optuna==4.7.0",
     "pandas==2.3.3",
     "dask",
-    "fastparquet",
+    "fastparquet<2026.3.0",
     "lightgbm",
     "pip",
     "plotly",
