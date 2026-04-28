@@ -11,6 +11,7 @@
 # Secrets and local settings
 .env
 .env.*
+.sif
 local_settings.py
 
 
